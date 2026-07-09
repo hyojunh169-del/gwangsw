@@ -1,25 +1,28 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# 1. 스트림릿 페이지 기본 설정
+# 1. 스트림릿 페이지 기본 설정 (가로 레이아웃 최적화)
 st.set_page_config(
     page_title="뚱냥이 키우기 극악 버전",
     page_icon="🐱",
     layout="centered"
 )
 
-# 2. 상단 타이틀 및 설명
+# 2. 상단 타이틀 및 설명 (Streamlit 영역)
 st.title("🐱 뚱냥이 키우기 서비스")
 st.write("진화와 돌연사의 갈림길! 당신의 뚱냥이를 1톤(t) 이상의 '강승우'로 무사히 진화시켜보세요.")
+st.markdown("---")
 
-# 3. HTML/CSS/JavaScript 소스코드 (안전한 문자열 탈출 및 컴포넌트 격리)
-html_code = """
+# 3. HTML/CSS/JavaScript 코드 문자열 정의
+# 파이썬과 문자열 충돌을 막기 위해 홑따옴표 3개('''\n ... \n''') 형식과 정확한 인코딩 처리를 적용했습니다.
+html_code = '''
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        * { box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f0f3f8;
@@ -32,50 +35,54 @@ html_code = """
         }
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 440px;
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 24px;
             text-align: center;
         }
         .info-box {
             background-color: #fff5f5;
             border: 1px solid #ffe3e3;
-            border-radius: 12px;
-            padding: 12px;
-            font-size: 13px;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 14px;
             text-align: left;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             line-height: 1.6;
         }
         .info-box ul {
-            margin: 5px 0 0 0;
+            margin: 8px 0 0 0;
             padding-left: 20px;
         }
         .danger-text { color: #e63946; font-weight: bold; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
         .input-group input {
-            width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px;
-            font-size: 15px; box-sizing: border-box; outline: none;
+            width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 12px;
+            font-size: 15px; outline: none; transition: border-color 0.2s;
         }
+        .input-group input:focus { border-color: #ff6b6b; }
         .error-msg { color: #e63946; font-size: 12px; margin-top: 5px; display: none; }
+        
         .btn-main {
-            background-color: #ff6b6b; color: white; border: none; padding: 12px;
-            font-size: 15px; font-weight: bold; border-radius: 25px; cursor: pointer;
-            width: 100%; box-shadow: 0 4px 10px rgba(255,107,107,0.3);
+            background-color: #ff6b6b; color: white; border: none; padding: 14px;
+            font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer;
+            width: 100%; box-shadow: 0 4px 10px rgba(255,107,107,0.3); transition: all 0.2s;
         }
-        .badge-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
-        .badge { padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; color: white; }
+        .btn-main:hover { background-color: #ee5252; transform: translateY(-1px); }
+        
+        .badge-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .badge { padding: 6px 14px; border-radius: 15px; font-size: 13px; font-weight: bold; color: white; }
         .badge-name { background-color: #4da3ff; }
         .badge-weight { background-color: #ffa04d; }
         
-        /* 뚱냥이 박스 및 캐릭터 외형 보정 */
+        /* 뚱냥이 그래픽 및 컨테이너 최적화 */
         .cat-container {
-            background: #f8f9fa; border-radius: 15px; padding: 40px 10px; margin-bottom: 15px;
-            min-height: 180px; display: flex; justify-content: center; align-items: center; overflow: hidden;
+            background: #f8f9fa; border-radius: 16px; padding: 40px 10px; margin-bottom: 20px;
+            min-height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;
+            border: 1px solid #eee;
         }
         .cat-wrapper { 
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
@@ -83,198 +90,28 @@ html_code = """
             transform-origin: center center;
         }
         .cat-graphic {
-            width: 80px; height: 75px; background-color: #fab1a0; border-radius: 50% 50% 45% 45%;
-            position: relative; margin: 0 auto; border: 3px solid #2d3436; box-sizing: border-box;
+            width: 90px; height: 85px; background-color: #fab1a0; border-radius: 50% 50% 45% 45%;
+            position: relative; margin: 0 auto; border: 3px solid #2d3436;
         }
         .cat-graphic::before, .cat-graphic::after {
             content: ''; position: absolute; top: -10px; width: 0; height: 0;
-            border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 14px solid #fab1a0;
+            border-left: 11px solid transparent; border-right: 11px solid transparent; border-bottom: 15px solid #fab1a0;
         }
-        .cat-graphic::before { left: 4px; transform: rotate(-15deg); }
-        .cat-graphic::after { right: 4px; transform: rotate(15deg); }
-        .cat-face { position: absolute; top: 22px; width: 100%; display: flex; justify-content: center; gap: 16px; box-sizing: border-box;}
-        .cat-eye { width: 6px; height: 6px; background: #2d3436; border-radius: 50%; display: inline-block; text-align: center; line-height: 6px; font-size: 10px;}
+        .cat-graphic::before { left: 5px; transform: rotate(-15deg); }
+        .cat-graphic::after { right: 5px; transform: rotate(15deg); }
+        .cat-face { position: absolute; top: 26px; width: 100%; display: flex; justify-content: center; gap: 20px; }
+        .cat-eye { width: 6px; height: 6px; background: #2d3436; border-radius: 50%; display: inline-block; font-size: 12px; font-weight: bold; line-height: 6px; }
         .cat-mouth {
-            position: absolute; top: 34px; left: 0; width: 100%; text-align: center; 
-            font-size: 11px; font-weight: bold; color: #2d3436; user-select: none;
+            position: absolute; top: 38px; left: 0; width: 100%; text-align: center; 
+            font-size: 13px; font-weight: bold; color: #2d3436; user-select: none;
         }
         
-        /* 동그란 버튼 레이아웃 배치 수정 */
-        .action-group { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 15px; }
+        /* 원형 버튼 간격 고정 */
+        .action-group { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
         .btn-circle {
-            width: 90px; height: 90px; border-radius: 50%; border: none; color: white;
-            font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100px; height: 100px; border-radius: 50%; border: none; color: white;
+            font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px;
-            flex-shrink: 0;
+            flex: 1; transition: transform 0.2s;
         }
-        .btn-food { background: #ff9f43; }
-        .btn-water { background: #54a0ff; }
-        .btn-treat { background: #ee5253; }
-        
-        .result-section { border-top: 1px dashed #e0e0e0; padding-top: 12px; text-align: left; }
-        .result-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #555; }
-        .history-list { list-style: none; padding: 0; margin: 0; max-height: 100px; overflow-y: auto; font-size: 12px; }
-        .history-item { padding: 6px 8px; border-radius: 6px; background: #f8f9fa; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .highlight { color: #ee5253; font-weight: bold; }
-        .hidden { display: none !important; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <div id="screen-input">
-            <div class="info-box">
-                <strong>💡 핵심 규칙 및 안내 조건</strong>
-                <ul>
-                    <li>동그란 3가지 버튼으로 육성합니다.</li>
-                    <li>버튼을 누를 때마다 뚱냥이가 커집니다.</li>
-                    <li>몸무게 <span class="danger-text">1t (1,000kg)</span> 돌파 시 <strong>'강승우'</strong> 진화!</li>
-                    <li>⚠️ 한 가지 행동만 계속 고집하면 돌연사합니다!</li>
-                </ul>
-            </div>
-            <div class="input-group">
-                <label for="username">고양이의 이름을 정해주세요</label>
-                <input type="text" id="username" placeholder="예: 나비, 뚱이" autocomplete="off">
-                <div id="error-message" class="error-msg">이름을 입력해 주세요!</div>
-            </div>
-            <button class="btn-main" onclick="initApp()">키우기 시작 🚀</button>
-        </div>
-
-        <div id="screen-game" class="hidden">
-            <div class="badge-container">
-                <span class="badge badge-name" id="display-name">이름: -</span>
-                <span class="badge badge-weight" id="display-weight">3.0 kg</span>
-            </div>
-            <div class="cat-container">
-                <div class="cat-wrapper" id="cat-wrapper">
-                    <div class="cat-graphic" id="cat-mesh">
-                        <div class="cat-face">
-                            <div class="cat-eye" id="eye-l"></div>
-                            <div class="cat-eye" id="eye-r"></div>
-                        </div>
-                        <div class="cat-mouth" id="cat-mouth-text">🐱</div>
-                    </div>
-                </div>
-            </div>
-            <div class="action-group" id="action-board">
-                <button class="btn-circle btn-food" onclick="feed('food')">🍪<span>사료</span></button>
-                <button class="btn-circle btn-water" onclick="feed('water')">💧<span>물</span></button>
-                <button class="btn-circle btn-treat" onclick="feed('treat')">🍗<span>특식</span></button>
-            </div>
-            <button class="btn-main hidden" id="btn-restart" onclick="resetGame()" style="margin-bottom:15px;">다시 키우기 🔄</button>
-            <div class="result-section">
-                <div class="result-title">실시간 기록</div>
-                <ul class="history-list" id="history-log"></ul>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script>
-        var currentName = "";
-        var weight = 3.0; 
-        var scaleValue = 1.0; 
-        var lastAction = "";
-        var sameActionCount = 0;
-        var isGameOver = false;
-
-        function initApp() {
-            var inputField = document.getElementById('username');
-            var errorElement = document.getElementById('error-message');
-            if (!inputField || !inputField.value.trim()) {
-                if (errorElement) errorElement.style.display = 'block';
-                return;
-            }
-            if (errorElement) errorElement.style.display = 'none';
-            currentName = inputField.value.trim();
-            document.getElementById('screen-input').classList.add('hidden');
-            document.getElementById('screen-game').classList.remove('hidden');
-            updateUI();
-            logHistory(currentName + " 성장을 시작했습니다!");
-        }
-
-        function feed(actionType) {
-            if (isGameOver) return;
-            if (lastAction === actionType) { sameActionCount++; } else { sameActionCount = 1; lastAction = actionType; }
-            if (sameActionCount >= 4) { triggerGameOver(); return; }
-
-            var gain = 0; var actionName = "";
-            if (actionType === 'food') { gain = 35.0; actionName = "🍪 사료"; }
-            if (actionType === 'water') { gain = 15.0; actionName = "💧 물"; }
-            if (actionType === 'treat') { gain = 95.0; actionName = "🍗 특식"; }
-
-            weight += gain;
-            scaleValue += (gain * 0.01);
-            if (scaleValue > 2.5) scaleValue = 2.5; 
-
-            if (weight >= 1000 && currentName !== "강승우") {
-                currentName = "강승우";
-                triggerEvolution();
-            }
-            updateUI();
-            logHistory(actionName + " 성공! <span class='highlight'>+" + gain + "kg</span>");
-        }
-
-        function updateUI() {
-            document.getElementById('display-name').innerText = "이름: " + currentName;
-            if (weight >= 1000) {
-                document.getElementById('display-weight').innerText = (weight/1000).toFixed(2) + " t";
-            } else {
-                document.getElementById('display-weight').innerText = weight.toFixed(1) + " kg";
-            }
-            document.getElementById('cat-wrapper').style.transform = "scale(" + scaleValue + ")";
-        }
-
-        function logHistory(message) {
-            var logBox = document.getElementById('history-log');
-            if (!logBox) return;
-            var li = document.createElement('li');
-            li.className = 'history-item';
-            li.innerHTML = "<span>" + message + "</span>";
-            logBox.insertBefore(li, logBox.firstChild);
-        }
-
-        function triggerEvolution() {
-            document.getElementById('cat-mesh').style.backgroundColor = "#ff7675";
-            logHistory("🎊 1t 돌파! [강승우](으)로 대진화!");
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-            }
-        }
-
-        function triggerGameOver() {
-            isGameOver = true;
-            document.getElementById('cat-mesh').style.backgroundColor = "#747d8c";
-            var eyeL = document.getElementById('eye-l');
-            var eyeR = document.getElementById('eye-r');
-            if (eyeL) { eyeL.style.background = "none"; eyeL.innerText = "X"; }
-            if (eyeR) { eyeR.style.background = "none"; eyeR.innerText = "X"; }
-            var mouthText = document.getElementById('cat-mouth-text');
-            if (mouthText) mouthText.innerText = "기절";
-            logHistory("💀 연속 행동으로 돌연사했습니다... (실패)");
-            document.getElementById('action-board').classList.add('hidden');
-            document.getElementById('btn-restart').classList.remove('hidden');
-        }
-
-        function resetGame() {
-            currentName = ""; weight = 3.0; scaleValue = 1.0; lastAction = ""; sameActionCount = 0; isGameOver = false;
-            document.getElementById('cat-mesh').style.backgroundColor = "#fab1a0";
-            var eyeL = document.getElementById('eye-l'); var eyeR = document.getElementById('eye-r');
-            if (eyeL) { eyeL.style.background = "#2d3436"; eyeL.innerText = ""; }
-            if (eyeR) { eyeR.style.background = "#2d3436"; eyeR.innerText = ""; }
-            var mouthText = document.getElementById('cat-mouth-text');
-            if (mouthText) mouthText.innerText = "🐱";
-            document.getElementById('username').value = "";
-            document.getElementById('history-log').innerHTML = "";
-            document.getElementById('action-board').classList.remove('hidden');
-            document.getElementById('btn-restart').classList.add('hidden');
-            document.getElementById('screen-game').classList.add('hidden');
-            document.getElementById('screen-input').classList.remove('hidden');
-        }
-    </script>
-</body>
-</html>
-"""
-
-# 4. 컴포넌트 출력 (여유로운 높이 지정과 코드가 안 깨지도록 완전 격리 수용)
-components.html(html_code, height=800, scrolling=True)
+        .
