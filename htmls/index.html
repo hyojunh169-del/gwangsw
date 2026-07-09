@@ -1,364 +1,65 @@
-```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>뚱냥이 키우기</title>
+    <title>뚱냥이 키우기 극악 버전</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* * [CSS 스타일링] 
-         * 초보자를 위한 설명: 이곳은 웹페이지의 디자인(색상, 레이아웃, 크기)을 결정하는 곳입니다.
-         * 모바일 환경에서도 예쁘게 보이도록 반응형(Flexbox 등)으로 작성되었습니다.
+        /* * [CSS 스타일 및 레이아웃]
+         * 고등학생 타겟에 맞춘 깔끔하고 트렌디한 카드형 레이아웃 및 뚱냥이 그림 중심 디자인입니다.
          */
-
-        /* 기본 전체 설정 */
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-            background-color: #f7f9fc;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: #f0f3f8;
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             color: #333;
         }
 
-        /* 전체 내용을 감싸는 컨테이너 (모바일 반응형 최대 너비 설정) */
-        .app-container {
+        .container {
             width: 100%;
-            max-width: 480px;
-        }
-
-        /* 상단 타이틀 섹션 */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .header h1 {
-            color: #ff6b6b;
-            margin: 0 0 8px 0;
-            font-size: 28px;
-        }
-        .header p {
-            margin: 0;
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* 카드형 레이아웃 디자인 */
-        .card {
-            background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            max-width: 450px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             padding: 24px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
             margin-bottom: 20px;
         }
 
-        /* 규칙 및 조건 안내 영역 */
-        .rules-box {
-            background-color: #fff0f0;
-            border-left: 4px solid #ff6b6b;
-            padding: 12px 16px;
-            border-radius: 0 8px 8px 0;
+        /* 안내 문구 영역 */
+        .info-box {
+            background-color: #fff5f5;
+            border: 1px solid #ffe3e3;
+            border-radius: 16px;
+            padding: 14px;
+            font-size: 13px;
+            text-align: left;
             margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
-        .rules-box ul {
-            margin: 8px 0 0 0;
+        .info-box ul {
+            margin: 6px 0 0 0;
             padding-left: 20px;
         }
-
-        /* 입력 폼 및 경고 메시지 */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .input-group label {
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .input-group input {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .input-group input:focus {
-            border-color: #ff6b6b;
-        }
-        .error-message {
-            color: #ff4757;
-            font-size: 12px;
-            display: none; /* 기본적으로는 숨겨둡니다 */
-        }
-
-        /* 버튼 스타일 */
-        .btn {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            width: 100%;
-            margin-top: 16px;
-        }
-        .btn:hover { background-color: #fa5252; }
-        .btn:active { transform: scale(0.98); }
-
-        /* 행동 버튼들 (사료, 물, 특식) */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .action-buttons .btn {
-            margin-top: 0;
-            flex: 1;
-            padding: 12px 8px;
-            font-size: 14px;
-        }
-        .btn-water { background-color: #4dabf7; }
-        .btn-water:hover { background-color: #339af0; }
-        .btn-food { background-color: #ffa94d; }
-        .btn-food:hover { background-color: #ff922b; }
-        .btn-treat { background-color: #ff6b6b; }
-        .btn-treat:hover { background-color: #fa5252; }
-
-        /* 뚱냥이 화면 (캐릭터) */
-        .cat-display {
-            text-align: center;
-            padding: 40px 0;
-            overflow: hidden;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #cat-emoji {
-            font-size: 60px;
-            display: inline-block;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-origin: bottom center;
-        }
-
-        /* 상태 배지 (진행도 표시) */
-        .badge-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-        .badge {
-            background-color: #2ed573;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .badge-level { background-color: #ffa502; }
-
-        /* 결과/기록 하이라이트 영역 */
-        .history-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .history-item {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-        .history-item:last-child {
-            border-bottom: none;
-        }
-        .highlight-text {
-            color: #ff6b6b;
+        .danger-text {
+            color: #e63946;
             font-weight: bold;
         }
-
-        /* 요소 숨김 유틸리티 클래스 */
-        .hidden {
-            display: none !important;
-        }
-
-        /* 애니메이션 */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="app-container">
-        <header class="header">
-            <h1>🐱 뚱냥이 키우기</h1>
-            <p>나만의 고양이를 건강하고 포동포동하게 키워보세요!</p>
-        </header>
-
-        <section id="setup-screen" class="card">
-            <div class="rules-box">
-                <strong>🚨 뚱냥이 키우기 핵심 조건 3가지</strong>
-                <ul>
-                    <li><strong>사료 주기:</strong> 꾸준히 먹여 살을 찌웁니다.</li>
-                    <li><strong>물 주기:</strong> 수분 보충은 필수입니다.</li>
-                    <li><strong>특식 주기:</strong> 가끔 줘서 확 찌울 수 있습니다.</li>
-                </ul>
-                <p style="margin-top:8px; font-size:12px; color:#666;">* 모든 행동은 기록되며 즉시 결과에 반영됩니다.</p>
-            </div>
-
-            <div class="input-group">
-                <label for="cat-name">고양이의 이름을 지어주세요!</label>
-                <input type="text" id="cat-name" placeholder="예: 나비, 뚱이" autocomplete="off">
-                <div id="name-error" class="error-message">앗! 고양이 이름이 비어있어요. 이름을 꼭 입력해주세요!</div>
-            </div>
-            
-            <button class="btn" onclick="startGame()">입양하기 (시작)</button>
-        </section>
-
-        <section id="play-screen" class="card hidden">
-            <div class="badge-container">
-                <div class="badge badge-level" id="badge-name">이름: -</div>
-                <div class="badge" id="badge-weight">몸무게: 3.0kg</div>
-            </div>
-
-            <div class="cat-display">
-                <div id="cat-emoji">🐱</div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-water" onclick="takeAction('water')">💧 물 주기</button>
-                <button class="btn btn-food" onclick="takeAction('food')">🐟 사료 주기</button>
-                <button class="btn btn-treat" onclick="takeAction('treat')">🍗 특식 주기</button>
-            </div>
-        </section>
-
-        <section id="history-screen" class="card hidden">
-            <h3 style="margin-top:0; font-size:16px;">돌봄 기록장 📝</h3>
-            <ul id="history-list" class="history-list">
-                </ul>
-        </section>
-    </div>
-
-    <script>
-        /* * [JavaScript 로직]
-         * 초보자를 위한 설명: 이곳은 웹앱의 동작(버튼 클릭, 데이터 계산, 화면 변경)을 제어하는 곳입니다.
-         */
-
-        // 고양이 상태를 저장할 변수들
-        let catName = "";
-        let catWeight = 3.0; // 초기 몸무게 3.0kg
-        let catScale = 1.0;  // 고양이 크기 비율 (점점 커집니다)
-
-        /**
-         * [게임 시작 함수]
-         * '입양하기' 버튼을 누르면 실행됩니다.
-         */
-        function startGame() {
-            const nameInput = document.getElementById("cat-name").value.trim();
-            const errorMsg = document.getElementById("name-error");
-
-            // 규칙: 사용자 입력이 비어 있으면 진행할 수 없다.
-            if (nameInput === "") {
-                errorMsg.style.display = "block"; // 경고 메시지 표시
-                return; // 함수 종료 (다음으로 넘어가지 않음)
-            }
-
-            // 에러 메시지 숨기기 및 데이터 저장
-            errorMsg.style.display = "none";
-            catName = nameInput;
-
-            // 화면 전환: 입력창 숨기고, 플레이창 및 기록창 보이기
-            document.getElementById("setup-screen").classList.add("hidden");
-            document.getElementById("play-screen").classList.remove("hidden");
-            document.getElementById("history-screen").classList.remove("hidden");
-
-            // 상태 배지에 이름 업데이트
-            document.getElementById("badge-name").innerText = `이름: ${catName}`;
-            
-            // 첫 기록 추가
-            addHistory("입양을 축하합니다! 뚱냥이 키우기 시작 🎉", "0.0");
-        }
-
-        /**
-         * [행동 실행 함수]
-         * 물, 사료, 특식 버튼을 누르면 실행됩니다.
-         */
-        function takeAction(type) {
-            let weightGain = 0;
-            let actionText = "";
-
-            // 조건에 따라 몸무게 증가량과 메시지 설정
-            if (type === 'water') {
-                weightGain = 0.1;
-                actionText = "시원한 물을 마셨어요!";
-            } else if (type === 'food') {
-                weightGain = 0.5;
-                actionText = "맛있는 사료를 냠냠 먹었어요!";
-            } else if (type === 'treat') {
-                weightGain = 1.2;
-                actionText = "대박! 특식을 먹고 기분이 최고예요!";
-            }
-
-            // 1. 몸무게 데이터 업데이트 (소수점 1자리까지 표시)
-            catWeight = parseFloat((catWeight + weightGain).toFixed(1));
-            document.getElementById("badge-weight").innerText = `몸무게: ${catWeight}kg`;
-
-            // 2. 화면에 고양이 모습 뚱뚱하게 만들기 (결과 즉시 반영)
-            // 몸무게가 1kg 늘어날 때마다 크기가 조금씩(0.1) 커짐
-            catScale = 1.0 + ((catWeight - 3.0) * 0.1); 
-            
-            // 너무 커져서 화면을 벗어나지 않도록 최대 크기 제한 (선택사항)
-            if(catScale > 3.0) catScale = 3.0; 
-
-            document.getElementById("cat-emoji").style.transform = `scale(${catScale})`;
-
-            // 3. 이전 기록을 확인할 수 있도록 기록장 추가
-            addHistory(actionText, weightGain);
-        }
-
-        /**
-         * [기록 추가 함수]
-         * 돌봄 기록장에 새로운 내역을 추가합니다.
-         */
-        function addHistory(message, gain) {
-            const list = document.getElementById("history-list");
-            
-            // 새로운 리스트 아이템(li) 만들기
-            const li = document.createElement("li");
-            li.className = "history-item";
-
-            // 현재 시간 구하기 (예: 14:30)
-            const now = new Date();
-            const timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-            // 들어갈 텍스트 조합 (결과 하이라이트 포함)
-            if (gain > 0) {
-                li.innerHTML = `<span>[${timeString}] ${message}</span> <span class="highlight-text">+${gain}kg</span>`;
-            } else {
-                li.innerHTML = `<span>[${timeString}] ${message}</span>`;
-            }
-
-            // 리스트의 맨 위(첫번째)에 새 기록 추가
-            list.prepend(li);
-        }
-    </script>
-</body>
-</html>
-
-```
